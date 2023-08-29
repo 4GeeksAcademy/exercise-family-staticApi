@@ -35,8 +35,34 @@ def handle_hello():
         "family": members
     }
 
-
     return jsonify(response_body), 200
+
+@app.route('/member/<int:member_id>', methods=['GET', 'POST', 'DELETE'])
+def retrive_one_menber(member_id):
+    # this is how you can get a member
+    if request.method == 'GET': 
+        member = jackson_family.get_member(member_id)
+        return jsonify(member), 200
+    
+    # this is how you can create a member
+    if request.method == 'POST': 
+        data = request.json  # Assuming you send JSON data in the request
+        new_member = jackson_family.add_member(data)
+        return jsonify(new_member), 200
+    
+    # DELETE request
+    if request.method == 'DELETE':
+        deleted = jackson_family.delete_member(member_id)
+        if deleted:
+            return jsonify({"message": "Member deleted successfully"}), 200
+        else:
+            return jsonify({"message": "Member not found"}), 404
+
+    content = {
+      "details": "Hey, there has been an error on your request"
+    }
+    return jsonify(content), 400
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
