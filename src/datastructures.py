@@ -18,21 +18,21 @@ class FamilyStructure:
             "first_name": "John",
             "last_name": "Jackson",
             "age": 33,
-            "Lucky Numbers": [7, 13, 22]
+            "lucky_numbers": [7, 13, 22]
         },
         {
             "id": self._generateId(),
             "first_name": "Jane",
             "last_name": "Jackson",
             "age": 35,
-            "Lucky Numbers": [10, 14, 3]
+            "lucky_numbers": [10, 14, 3]
         },
         {
             "id": self._generateId(),
             "first_name": "Jimmy",
             "last_name": "Jackson",
             "age": 5,
-            "Lucky Numbers": [1]
+            "lucky_numbers": [1]
         },
         ]
 
@@ -41,8 +41,8 @@ class FamilyStructure:
         return randint(0, 99999999)
 
     def add_member(self, member):
-        self._members.append(member)  # Append to _members, not FamilyStructure
-        return member
+            self._members.append(member)  # Append to _members, not FamilyStructure
+            return member
 
     def delete_member(self, id):
         for m in self._members:

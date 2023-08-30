@@ -25,44 +25,34 @@ def handle_invalid_usage(error):
 def sitemap():
     return generate_sitemap(app)
 
+# GET all members
 @app.route('/members', methods=['GET'])
-def handle_hello():
+def handle_members():
+        members = jackson_family.get_all_members()
+        
+        return jsonify(members), 200
 
-    # this is how you can use the Family datastructure by calling its methods
-    members = jackson_family.get_all_members()
-    response_body = {
-        "hello": "world",
-        "family": members
-    }
-
-    return jsonify(response_body), 200
-
-@app.route('/member/<int:member_id>', methods=['GET', 'POST', 'DELETE'])
-def retrive_one_menber(member_id):
-    # this is how you can get a member
-    if request.method == 'GET': 
-        member = jackson_family.get_member(member_id)
-        return jsonify(member), 200
-    
-    # this is how you can create a member
-    if request.method == 'POST': 
-        data = request.json  # Assuming you send JSON data in the request
+@app.route('/member', methods=['POST'])
+def handle_member_post():
+        data = request.json
         new_member = jackson_family.add_member(data)
         return jsonify(new_member), 200
+
+# GET, POST, and DELETE a specific member
+@app.route('/member/<int:member_id>', methods=['GET', 'DELETE'])
+def handle_member(member_id):
+    if request.method == 'GET': 
+        member = jackson_family.get_member(member_id)
+        if member is None:
+            return jsonify({"message": "Member not found"}), 404
+        return jsonify(member), 200
     
-    # DELETE request
     if request.method == 'DELETE':
         deleted = jackson_family.delete_member(member_id)
         if deleted:
-            return jsonify({"message": "Member deleted successfully"}), 200
+            return jsonify({"done": True}), 200  # Use 204 for successful deletions
         else:
             return jsonify({"message": "Member not found"}), 404
-
-    content = {
-      "details": "Hey, there has been an error on your request"
-    }
-    return jsonify(content), 400
-
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
